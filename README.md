@@ -1,4 +1,5 @@
 # bevy_doudizhu
 
 ## todo
-- [ ] bevy plugins part
+- [x] bevy plugins part
+- [ ] bevy next step
