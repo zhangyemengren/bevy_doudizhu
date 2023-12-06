@@ -90,13 +90,33 @@ impl Plugin for HelloPlugin {
 }
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(Camera2dBundle::default());
-    commands.spawn(SpriteBundle {
-        texture: asset_server.load("cards/card_back.png"),
-        ..default()
-    });
-    commands.spawn(SpriteBundle {
-        texture: asset_server.load("cards/card_clubs_02.png"),
-        transform: Transform::from_xyz(100.0, 0.0, 0.0),
-        ..default()
-    });
+
+    let all_cards = [
+        &[BACK_CARD],
+        &CLUBS_CARD[..],
+        &DIAMONDS_CARD[..],
+        &HEARTS_CARD[..],
+        &SPADES_CARD[..],
+        &JOKER_CARD[..],
+    ]
+        .concat();
+
+    let w = 64.0; //有白边
+    let h = 64.0;
+    let origin = (-600.0 + w * 0.5, 400.0 - h * 0.5);
+    let mut x_offset = origin.0;
+    let mut y_offset = origin.1;
+
+    for card in all_cards.iter() {
+        commands.spawn(SpriteBundle {
+            texture: asset_server.load(*card),
+            transform: Transform::from_xyz(x_offset, y_offset, 0.0),
+            ..default()
+        });
+        x_offset += w;
+        if x_offset > 600.0 - w {
+            x_offset = origin.0;
+            y_offset -= h;
+        }
+    }
 }
