@@ -107,9 +107,8 @@ fn main() {
                 }),
                 ..default()
             }),
-            HelloPlugin,
         ))
-        .add_systems(Startup, ui_setup)
+        .add_systems(Startup, setup)
         .add_systems(Update, button_system)
         .run();
 }
@@ -146,11 +145,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>, mut all_cards: 
             y_offset -= h;
         }
     }
-}
-
-fn ui_setup(mut commands: Commands, asset_server: Res<AssetServer>, mut materials: ResMut<Assets<ColorMaterial>>) {
-
-    commands.spawn(Camera2dBundle::default());
+    // 按钮
     commands
         .spawn(NodeBundle {
             style: Style {
@@ -192,6 +187,7 @@ fn ui_setup(mut commands: Commands, asset_server: Res<AssetServer>, mut material
         });
 }
 
+
 fn button_system(
     mut interaction_query: Query<
         (
@@ -203,6 +199,9 @@ fn button_system(
         (Changed<Interaction>, With<Button>),
     >,
     mut text_query: Query<&mut Text>,
+    mut all_cards: ResMut<AllCards>,
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
 ) {
     
     for (interaction, mut color, mut border_color, children) in &mut interaction_query {
@@ -212,6 +211,29 @@ fn button_system(
                 text.sections[0].value = "Press".to_string();
                 *color = PRESSED_BUTTON.into();
                 border_color.0 = Color::RED;
+                let mut rng = thread_rng();
+
+
+                all_cards.0.shuffle(&mut rng);
+
+                let w = 64.0; //有白边
+                let h = 64.0;
+                let origin = (-600.0 + w * 0.5, 400.0 - h * 0.5);
+                let mut x_offset = origin.0;
+                let mut y_offset = origin.1;
+
+                for card in all_cards.0.iter() {
+                    commands.spawn(SpriteBundle {
+                        texture: asset_server.load(*card),
+                        transform: Transform::from_xyz(x_offset, y_offset, 0.0),
+                        ..default()
+                    });
+                    x_offset += w;
+                    if x_offset > 600.0 - w {
+                        x_offset = origin.0;
+                        y_offset -= h;
+                    }
+                }
             }
             Interaction::Hovered => {
                 text.sections[0].value = "Hover".to_string();
