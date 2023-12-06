@@ -1,4 +1,3 @@
-//! Displays a single [`Sprite`], created from an image.
 
 use bevy::prelude::*;
 const BACK_CARD: &str = "cards/card_back.png";
