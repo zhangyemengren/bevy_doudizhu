@@ -6,3 +6,4 @@ publish = false
 
 [dependencies]
 bevy = { version = "0.12", features = ["dynamic_linking"] }
+rand = { version = "0.8" }
