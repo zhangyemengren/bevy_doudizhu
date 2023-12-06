@@ -65,7 +65,6 @@ const SPADES_CARD: [&str; 13] = [
 ];
 const JOKER_CARD: [&str; 2] = ["cards/card_joker_black.png", "cards/card_joker_red.png"];
 
-
 const NORMAL_BUTTON: Color = Color::rgb(0.15, 0.15, 0.15);
 const HOVERED_BUTTON: Color = Color::rgb(0.25, 0.25, 0.25);
 const PRESSED_BUTTON: Color = Color::rgb(0.35, 0.75, 0.35);
@@ -123,7 +122,6 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>, mut all_cards: 
     commands.spawn(Camera2dBundle::default());
 
     let mut rng = thread_rng();
-
 
     all_cards.0.shuffle(&mut rng);
 
@@ -187,7 +185,6 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>, mut all_cards: 
         });
 }
 
-
 fn button_system(
     mut interaction_query: Query<
         (
@@ -203,7 +200,6 @@ fn button_system(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
 ) {
-    
     for (interaction, mut color, mut border_color, children) in &mut interaction_query {
         let mut text = text_query.get_mut(children[0]).unwrap();
         match *interaction {
@@ -212,7 +208,6 @@ fn button_system(
                 *color = PRESSED_BUTTON.into();
                 border_color.0 = Color::RED;
                 let mut rng = thread_rng();
-
 
                 all_cards.0.shuffle(&mut rng);
 
@@ -248,4 +243,3 @@ fn button_system(
         }
     }
 }
-
